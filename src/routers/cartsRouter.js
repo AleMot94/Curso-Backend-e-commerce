@@ -16,6 +16,13 @@ CARTS_ROUTER.post("/:cid/product/:pid", (req, res) => {
     const CART = CM.getCartById(ID_CART);
     const PRODUCT = PM.getProductById(ID_PRODUCT);
 
+    if (!CART) {
+        return res.status(404).json({ error: "Cart not found" });
+    }
+    if (!PRODUCT) {
+        return res.status(404).json({ error: "Product not found" });
+    }
+
     const productIndex = CART.products.findIndex(product => product.product_id === ID_PRODUCT);
 
     if (PRODUCT && CART) {
@@ -50,14 +57,20 @@ CARTS_ROUTER.get("/:cid", (req, res) => {
 
 CARTS_ROUTER.delete("/:cid", (req, res) => {
     const id = Number(req.params.cid);
-    CM.deleteCart(id);
+    const CART = CM.deleteCart(id);
+    if (!CART) {
+        return res.status(404).json({ error: "Cart not found" });
+    }
     return res.status(200).json({ message: "Cart deleted successfully" });
 });
 
 CARTS_ROUTER.put("/:cid", (req, res) => {
     const id = Number(req.params.cid);
     const { products } = req.body;
-    CM.updateCart(id, products);
-    return res.status(200).json({ message: "Cart updated successfully" });
+    // const CART = CM.updateCart(id, { products });
+    // if (!CART) {
+    //     return res.status(404).json({ error: "Cart not found" });
+    // }
+    // return res.status(200).json({ message: "Cart updated successfully" });
 });
 export default CARTS_ROUTER

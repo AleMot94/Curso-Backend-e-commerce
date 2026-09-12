@@ -1,4 +1,17 @@
 import fs from "fs";
+import multer from "multer"
+import path from "path";
+
+export const __DIRNAME = import.meta.dirname;
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__DIRNAME, "..", "public", "images", "products"))
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname)
+    }
+})
+export const UPLOADER_PRODUCTS = multer({ storage });
 
 class ProductManager {
     constructor(path) {
@@ -56,7 +69,6 @@ class ProductManager {
         this.products = this.#readFile();
         const product = this.products.find(product => product.id === id);
         if (!product) {
-            console.log("Not found");
             return;
         }
         return product;
@@ -88,8 +100,6 @@ class ProductManager {
         this.#writeFile(this.products);
     }
 }
-
-export const PM = new ProductManager();
 
 class CartManager {
     constructor(path) {
@@ -134,7 +144,6 @@ class CartManager {
         this.carts = this.#readFile();
         const cart = this.carts.find(cart => cart.id === id);
         if (!cart) {
-            console.log("Not found");
             return;
         }
         return cart;
@@ -152,16 +161,18 @@ class CartManager {
     }
 
     updateCart(id, upd) {
-        this.carts = this.#readFile();
-        const index = this.carts.findIndex(cart => cart.id === id);
-        if (index === -1) {
-            console.log("Not found");
-            return;
-        }
-        this.carts[index] = { ...this.carts[index], ...upd, id: this.carts[index].id };
-        this.#writeFile(this.carts);
+        // this.carts = this.#readFile();
+        // const index = this.carts.findIndex(cart => cart.id === id);
+        // if (index === -1) {
+        //     console.log("Not found");
+        //     return;
+        // }
+        // this.carts[index] = { ...this.carts[index], ...upd, id: this.carts[index].id };
+        // this.#writeFile(this.carts);
     }
 
 }
+
+export const PM = new ProductManager();
 export const CM = new CartManager()
 
