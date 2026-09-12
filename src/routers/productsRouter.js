@@ -1,10 +1,10 @@
 import express from "express";
-import PM from "../utils.js"
+import { PM } from "../utils.js"
 
 
-const Router = express.Router();
+const PRODUCTS_ROUTER = express.Router();
 
-Router.get("/", async (req, res) => {
+PRODUCTS_ROUTER.get("/", async (req, res) => {
 
     const limit = req.query.limit;
     if (limit) {
@@ -13,7 +13,7 @@ Router.get("/", async (req, res) => {
     return res.status(200).json(PM.getProduct());
 });
 
-Router.get("/:pid", (req, res) => {
+PRODUCTS_ROUTER.get("/:pid", (req, res) => {
     const id = Number(req.params.pid)
     const product = PM.getProductById(id)
 
@@ -24,22 +24,22 @@ Router.get("/:pid", (req, res) => {
     }
 })
 
-Router.post("/", (req, res) => {
+PRODUCTS_ROUTER.post("/", (req, res) => {
     const { title, description, price, thumbnail, code, stock } = req.body;
     PM.addProduct(title, description, price, thumbnail, code, stock);
     return res.status(201).json({ message: "Product added successfully" });
 })
 
-Router.put("/:pid", (req, res) => {
+PRODUCTS_ROUTER.put("/:pid", (req, res) => {
     const id = Number(req.params.pid)
     PM.updateProduct(id, req.body);
     return res.status(200).json({ message: "Product updated successfully" });
 })
 
-Router.delete("/:pid", (req, res) => {
+PRODUCTS_ROUTER.delete("/:pid", (req, res) => {
     const id = Number(req.params.pid)
     PM.deleteProduct(id);
     return res.status(200).json({ message: "Product deleted successfully" });
 })
 
-export default Router
+export default PRODUCTS_ROUTER
