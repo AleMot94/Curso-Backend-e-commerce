@@ -44,14 +44,12 @@ class ProductManager {
 
     addProduct(title, description, price, thumbnail, code, stock) {
         if (!title || !description || price === undefined || !thumbnail || !code || stock === undefined) {
-            console.log("Todos los campos son obligatorios");
-            return;
+            return "empty_fields";
         }
         this.products = this.#readFile();
         const CODE_EXIST = this.products.find(product => product.code === code);
         if (CODE_EXIST) {
-            console.log("Code duplicate");
-            return;
+            return "code_duplicate";
         }
         this.products.push({
             id: this.#generateId(),

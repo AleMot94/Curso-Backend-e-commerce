@@ -25,13 +25,19 @@ PRODUCTS_ROUTER.get("/:pid", (req, res) => {
 })
 
 PRODUCTS_ROUTER.post("/", UPLOADER_PRODUCTS.single("thumbnail"), (req, res) => {
-    console.log(req.file)
     if (!req.file) {
         return res.status(400).json({ error: "No image provided" })
     }
     const { title, description, price, code, stock } = req.body;
     const thumbnail = req.file.filename;
-    PM.addProduct(title, description, price, thumbnail, code, stock);
+
+    const ADD_PRODUCT = PM.addProduct(title, description, price, thumbnail, code, stock);
+    if (ADD_PRODUCT === "empty_fields") {
+        return res.status(400).json({ error: "Empty fields" })
+    }
+    if (ADD_PRODUCT === "code_duplicate") {
+        return res.status(400).json({ error: "Code duplicate" })
+    }
     return res.status(201).json({ message: "Product added successfully" });
 })
 

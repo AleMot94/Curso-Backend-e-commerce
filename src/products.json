@@ -34,5 +34,14 @@
     "thumbnail": "jesus.jpg",
     "code": "code5",
     "stock": "35"
+  },
+  {
+    "id": 6,
+    "title": "description6",
+    "description": "description6",
+    "price": "100",
+    "thumbnail": "jesus.jpg",
+    "code": "code6",
+    "stock": "35"
   }
 ]
