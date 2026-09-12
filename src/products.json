@@ -16,5 +16,14 @@
     "thumbnail": "thumbnail3",
     "code": "code3",
     "stock": 40
+  },
+  {
+    "id": 4,
+    "title": "producto4",
+    "description": "descripcion4",
+    "price": 500,
+    "thumbnail": "thumbnail4",
+    "code": "code4",
+    "stock": 40
   }
 ]

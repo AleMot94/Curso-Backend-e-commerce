@@ -3,7 +3,7 @@ import fs from "fs";
 class ProductManager {
     constructor(path) {
         this.products = []
-        this.path = path || "products.json";
+        this.path = path || "src/products.json";
     }
 
     #generateId() {
