@@ -1,6 +1,7 @@
-import fs from "fs";
 import multer from "multer"
 import path from "path";
+import Product from "./models/Product.js";
+import Cart from "./models/Cart.js";
 
 export const __DIRNAME = import.meta.dirname;
 const storage = multer.diskStorage({
@@ -14,163 +15,114 @@ const storage = multer.diskStorage({
 export const UPLOADER_PRODUCTS = multer({ storage });
 
 class ProductManager {
-    constructor(path) {
-        this.products = []
-        this.path = path || "src/products.json";
+
+    async getProduct() {
+        return await Product.find();
     }
 
-    #generateId() {
-        const ID = this.products.reduce((maxId/*ACUMULADOR*/, product/*ELEMENTO ACTUAL - (INDEX, ARRAY*/) => {
-            return product.id > maxId ? product.id : maxId;
-        }, 0/*VALOS INICIAL ACUMULADOR*/) + 1
-        return ID
-    }
-    #readFile() {
+    async addProduct(title, description, price, thumbnail, code, stock) {
         try {
-            const data = fs.readFileSync(this.path, "utf-8");
-            return JSON.parse(data);
+            const NEW_PRODUCT = await Product.create({
+                title,
+                description,
+                price,
+                thumbnail,
+                code,
+                stock,
+            });
+            return NEW_PRODUCT;
         } catch (error) {
-            return [];
+            if (error.code === 11000) {
+                return "code_duplicate";
+            }
+            if (error.name === "ValidationError") {
+                return "empty_fields";
+            }
+            throw error;
         }
     }
 
-    #writeFile(products) {
-        fs.writeFileSync(this.path, JSON.stringify(products, null, 2));
-    }
-
-    getProduct() {
-        return this.#readFile();
-    }
-
-    addProduct(title, description, price, thumbnail, code, stock) {
-        if (!title || !description || price === undefined || !thumbnail || !code || stock === undefined) {
-            return "empty_fields";
-        }
-        this.products = this.#readFile();
-        const CODE_EXIST = this.products.find(product => product.code === code);
-        if (CODE_EXIST) {
-            return "code_duplicate";
-        }
-        this.products.push({
-            id: this.#generateId(),
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock
-        });
-        this.#writeFile(this.products);
-
-    }
-    getProductById(id) {
-        this.products = this.#readFile();
-        const product = this.products.find(product => product.id === id);
-        if (!product) {
+    async getProductById(id) {
+        try {
+            const product = await Product.findById(id);
+            if (!product) {
+                return;
+            }
+            return product;
+        } catch (error) {
             return;
         }
-        return product;
     }
 
-    updateProduct(id, upd) {
-        this.products = this.#readFile();
-        const index = this.products.findIndex(product => product.id === id);
-        if (index === -1) {
-            console.log("Not found");
+    async updateProduct(id, upd) {
+        try {
+            const UPDATED = await Product.findByIdAndUpdate(id, upd, {
+                new: true,
+                runValidators: true,
+            });
+            return UPDATED;
+        } catch (error) {
+            if (error.code === 11000) {
+                return "code_duplicate";
+            }
             return;
         }
-        if (upd.code && this.products.some(product => product.code === upd.code && product.id !== id)) {
-            console.log("Error: existing code");
-            return;
-        }
-        this.products[index] = { ...this.products[index], ...upd, id: this.products[index].id };
-        this.#writeFile(this.products);
     }
 
-    deleteProduct(id) {
-        this.products = this.#readFile();
-        const index = this.products.findIndex(product => product.id === id);
-        if (index === -1) {
-            console.log("Not found");
+    async deleteProduct(id) {
+        try {
+            const DELETED = await Product.findByIdAndDelete(id);
+            return DELETED;
+        } catch (error) {
             return;
         }
-        this.products.splice(index, 1);
-        this.#writeFile(this.products);
     }
 }
 
 class CartManager {
-    constructor(path) {
-        this.carts = []
-        this.path = path || "src/carts.json";
+
+    async getCart() {
+        return await Cart.find();
     }
 
-    #generateId() {
-        const ID = this.carts.reduce((maxId/*ACUMULADOR*/, cart/*ELEMENTO ACTUAL - (INDEX, ARRAY*/) => {
-            return cart.id > maxId ? cart.id : maxId;
-        }, 0/*VALOS INICIAL ACUMULADOR*/) + 1
-        return ID
+    async addCart() {
+        const NEW_CART = await Cart.create({ products: [] });
+        return NEW_CART;
     }
-    #readFile() {
+
+    async getCartById(id) {
         try {
-            const data = fs.readFileSync(this.path, "utf-8");
-            return JSON.parse(data);
+            const cart = await Cart.findById(id);
+            if (!cart) {
+                return;
+            }
+            return cart;
         } catch (error) {
-            return [];
-        }
-    }
-
-    #writeFile(carts) {
-        fs.writeFileSync(this.path, JSON.stringify(carts, null, 2));
-    }
-
-    getCart() {
-        return this.#readFile();
-    }
-
-    addCart(product) {
-        this.carts = this.#readFile();
-
-        this.carts.push({
-            id: this.#generateId(),
-            products: [],
-        });
-        this.#writeFile(this.carts);
-
-    }
-    getCartById(id) {
-        this.carts = this.#readFile();
-        const cart = this.carts.find(cart => cart.id === id);
-        if (!cart) {
             return;
         }
-        return cart;
     }
 
-    deleteCart(id) {
-        this.carts = this.#readFile();
-        const index = this.carts.findIndex(cart => cart.id === id);
-        if (index === -1) {
-            console.log("Not found");
+    async deleteCart(id) {
+        try {
+            const DELETED = await Cart.findByIdAndDelete(id);
+            return DELETED;
+        } catch (error) {
             return;
         }
-        this.carts.splice(index, 1);
-        this.#writeFile(this.carts);
     }
 
-    updateCart(id, upd) {
-        // this.carts = this.#readFile();
-        // const index = this.carts.findIndex(cart => cart.id === id);
-        // if (index === -1) {
-        //     console.log("Not found");
-        //     return;
-        // }
-        // this.carts[index] = { ...this.carts[index], ...upd, id: this.carts[index].id };
-        // this.#writeFile(this.carts);
+    async updateCart(id, upd) {
+        try {
+            const UPDATED = await Cart.findByIdAndUpdate(id, upd, {
+                new: true,
+                runValidators: true,
+            });
+            return UPDATED;
+        } catch (error) {
+            return;
+        }
     }
-
 }
 
 export const PM = new ProductManager();
 export const CM = new CartManager()
-
