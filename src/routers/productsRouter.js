@@ -1,5 +1,6 @@
 import express from "express";
-import { PM, UPLOADER_PRODUCTS } from "../utils.js"
+import { UPLOADER_PRODUCTS } from "../utils.js"
+import { PM } from "../DAO/productManager.js";
 
 
 const PRODUCTS_ROUTER = express.Router();

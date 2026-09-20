@@ -1,5 +1,6 @@
 import express from "express";
-import { CM, PM } from "../utils.js"
+import { CM } from "../DAO/cartManager.js";
+import { PM } from "../DAO/productManager.js";
 
 const CARTS_ROUTER = express.Router();
 

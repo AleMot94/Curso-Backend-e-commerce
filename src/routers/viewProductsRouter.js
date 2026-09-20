@@ -1,5 +1,5 @@
 import express from "express";
-import { PM } from "../utils.js"
+import { PM } from "../DAO/productManager.js";
 
 const PRODUCTS_VIEW_ROUTER = express.Router()
 

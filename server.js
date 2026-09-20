@@ -1,3 +1,4 @@
+import "dotenv/config"
 import express from "express"
 import PRODUCTS_ROUTER from "./src/routers/productsRouter.js"
 import CARTS_ROUTER from "./src/routers/cartsRouter.js"
@@ -10,7 +11,7 @@ import { connectDB } from "./src/config/db.js"
 
 
 const APP = express()
-const PORT = 8080
+const PORT = process.env.PORT || 8080
 const __DIRNAME = import.meta.dirname
 const HTTP_SERVER = createServer(APP)
 const IO = new Server(HTTP_SERVER)
