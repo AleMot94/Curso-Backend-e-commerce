@@ -37,7 +37,7 @@ class ProductManager {
             }
             return product;
         } catch (error) {
-            return;
+            throw error;
         }
     }
 
@@ -52,7 +52,7 @@ class ProductManager {
             if (error.code === 11000) {
                 return "code_duplicate";
             }
-            return;
+            throw error;
         }
     }
 
@@ -61,7 +61,7 @@ class ProductManager {
             const DELETED = await Product.findByIdAndDelete(id);
             return DELETED;
         } catch (error) {
-            return;
+            throw error;
         }
     }
 }

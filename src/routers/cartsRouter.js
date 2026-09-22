@@ -1,6 +1,6 @@
 import express from "express";
 import { CM } from "../DAO/cartManager.js";
-import { PM } from "../DAO/productManager.js";
+import { productService } from "../services/productService.js"
 
 const CARTS_ROUTER = express.Router();
 
@@ -14,7 +14,7 @@ CARTS_ROUTER.post("/:cid/product/:pid", async (req, res) => {
     const ID_PRODUCT = req.params.pid;
 
     const CART = await CM.getCartById(ID_CART);
-    const PRODUCT = await PM.getProductById(ID_PRODUCT);
+    const PRODUCT = await productService.getProductById(ID_PRODUCT);
 
     if (!CART) {
         return res.status(404).json({ error: "Cart not found" });
