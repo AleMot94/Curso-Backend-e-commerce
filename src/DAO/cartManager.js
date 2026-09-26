@@ -12,36 +12,24 @@ class CartManager {
     }
 
     async getCartById(id) {
-        try {
-            const cart = await Cart.findById(id);
-            if (!cart) {
-                return;
-            }
-            return cart;
-        } catch (error) {
+        const cart = await Cart.findById(id);
+        if (!cart) {
             return;
         }
+        return cart;
     }
 
     async deleteCart(id) {
-        try {
-            const DELETED = await Cart.findByIdAndDelete(id);
-            return DELETED;
-        } catch (error) {
-            return;
-        }
+        const DELETED = await Cart.findByIdAndDelete(id);
+        return DELETED;
     }
 
     async updateCart(id, upd) {
-        try {
-            const UPDATED = await Cart.findByIdAndUpdate(id, upd, {
-                new: true,
-                runValidators: true,
-            });
-            return UPDATED;
-        } catch (error) {
-            return;
-        }
+        const UPDATED = await Cart.findByIdAndUpdate(id, upd, {
+            new: true,
+            runValidators: true,
+        });
+        return UPDATED;
     }
 }
 

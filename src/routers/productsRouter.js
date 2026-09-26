@@ -26,7 +26,7 @@ PRODUCTS_ROUTER.get("/", async (req, res) => {
         return res.status(400).json({
             status: "error",
             message: "Error getting products",
-            answer: error
+            answer: null
         });
     }
 
@@ -46,8 +46,8 @@ PRODUCTS_ROUTER.get("/:pid", async (req, res) => {
         } else {
             return res.status(404).json({
                 status: "error",
-                message: "",
-                answer: "Product not found"
+                message: "Product not found",
+                answer: null
             })
         }
     } catch (error) {
@@ -55,7 +55,7 @@ PRODUCTS_ROUTER.get("/:pid", async (req, res) => {
         return res.status(400).json({
             status: "error",
             message: "Error getting product",
-            answer: error
+            answer: null
         });
     }
 
@@ -66,8 +66,8 @@ PRODUCTS_ROUTER.post("/", UPLOADER_PRODUCTS.single("thumbnail"), async (req, res
         if (!req.file) {
             return res.status(400).json({
                 status: "error",
-                message: "",
-                answer: "No image provided"
+                message: "No image provided",
+                answer: null
             })
         }
         const { title, description, price, code, stock } = req.body;
@@ -77,8 +77,8 @@ PRODUCTS_ROUTER.post("/", UPLOADER_PRODUCTS.single("thumbnail"), async (req, res
         if (ADD_PRODUCT === "empty_fields") {
             return res.status(400).json({
                 status: "error",
-                message: "",
-                answer: "Empty fields"
+                message: "Empty fields",
+                answer: null
             })
         }
         if (ADD_PRODUCT === "code_duplicate") {
@@ -94,7 +94,7 @@ PRODUCTS_ROUTER.post("/", UPLOADER_PRODUCTS.single("thumbnail"), async (req, res
         return res.status(400).json({
             status: "error",
             message: "Error getting products",
-            answer: error
+            answer: null
         });
     }
 
@@ -105,17 +105,17 @@ PRODUCTS_ROUTER.put("/:pid", async (req, res) => {
         const id = req.params.pid
         const UPDATED = await productService.updateProduct(id, req.body);
         if (UPDATED === "code_duplicate") {
-            return res.status(400).json({
+            return res.status(500).json({
                 status: "error",
                 message: "Code duplicate",
-                answer: ""
+                answer: null
             })
         }
         if (!UPDATED) {
             return res.status(404).json({
                 status: "error",
                 message: "Product not found",
-                answer: ""
+                answer: null
             })
         }
         return res.status(200).json({
@@ -125,7 +125,11 @@ PRODUCTS_ROUTER.put("/:pid", async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(400).json({ error: "Error getting products" });
+        return res.status(500).json({
+            status: "error",
+            message: "Internal server error",
+            answer: null
+        });
     }
 
 })
@@ -138,7 +142,7 @@ PRODUCTS_ROUTER.delete("/:pid", async (req, res) => {
             return res.status(404).json({
                 status: "error",
                 message: "Product not found",
-                answer: ""
+                answer: null
             })
         }
         return res.status(200).json({
@@ -151,7 +155,7 @@ PRODUCTS_ROUTER.delete("/:pid", async (req, res) => {
         return res.status(400).json({
             status: "error",
             message: "Error getting products",
-            answer: error
+            answer: null
         });
     }
 })
