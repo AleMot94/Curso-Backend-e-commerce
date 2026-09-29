@@ -8,6 +8,7 @@ import { engine } from 'express-handlebars';
 import { createServer } from 'http'
 import { Server } from "socket.io"
 import { connectDB } from "./src/config/db.js"
+//import { crearProductos } from "./src/utils/faker.js"
 
 
 const APP = express()
@@ -40,6 +41,7 @@ APP.use("/view/chat", VIEW_CHAT_ROUTER)
 
 const startServer = async () => {
     await connectDB()
+    //await crearProductos()  // TODO: comentar esta línea después de correrlo una vez
     HTTP_SERVER.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`)
     })

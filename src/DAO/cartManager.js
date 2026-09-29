@@ -26,7 +26,7 @@ class CartManager {
 
     async updateCart(id, upd) {
         const UPDATED = await Cart.findByIdAndUpdate(id, upd, {
-            new: true,
+            returnDocument: "after",
             runValidators: true,
         });
         return UPDATED;
