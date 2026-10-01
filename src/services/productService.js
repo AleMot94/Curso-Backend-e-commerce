@@ -4,8 +4,8 @@ class ProductService {
     constructor() {
         this.PM = PM
     }
-    async getProducts() {
-        return this.PM.getProduct()
+    async getProducts(page, limit) {
+        return this.PM.getProduct(page, limit)
     }
     async getProductById(id) {
         return this.PM.getProductById(id)

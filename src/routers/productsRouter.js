@@ -8,14 +8,8 @@ const PRODUCTS_ROUTER = express.Router();
 PRODUCTS_ROUTER.get("/", async (req, res) => {
     try {
         const limit = req.query.limit;
-        const products = await productService.getProducts();
-        if (limit) {
-            return res.status(200).json({
-                status: "success",
-                message: "Products found successfully",
-                answer: products.slice(0, limit)
-            });
-        }
+        const page = req.query.page;
+        const products = await productService.getProducts(page, limit);
         return res.status(200).json({
             status: "success",
             mesage: "Products found successfully",
