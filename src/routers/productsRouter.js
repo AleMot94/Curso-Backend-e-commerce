@@ -65,7 +65,7 @@ PRODUCTS_ROUTER.post("/", UPLOADER_PRODUCTS.single("thumbnail"), async (req, res
             })
         }
         const { title, description, price, code, stock } = req.body;
-        const thumbnail = req.file.filename;
+        const thumbnail = `/images/products/${req.file.filename}`;
 
         const ADD_PRODUCT = await productService.addProduct(title, description, price, thumbnail, code, stock);
         if (ADD_PRODUCT === "empty_fields") {

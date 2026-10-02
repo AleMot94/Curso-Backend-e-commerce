@@ -15,8 +15,8 @@ class ProductService {
     async getProductById(id) {
         return this.PM.getProductById(id)
     }
-    async addProduct(product) {
-        return this.PM.addProduct(product)
+    async addProduct(title, description, price, thumbnail, code, stock) {
+        return this.PM.addProduct(title, description, price, thumbnail, code, stock)
     }
     async updateProduct(id, product) {
         return this.PM.updateProduct(id, product)
