@@ -10,3 +10,19 @@
         <br>
     {{/each}}
 </div>
+
+<nav class="pagination-bar">
+    {{#if hasPrevPage}}
+        <a href="?page={{prevPage}}">&laquo; Anterior</a>
+    {{else}}
+        <span class="disabled">&laquo; Anterior</span>
+    {{/if}}
+
+    <span>Página {{page}} de {{pages}}</span>
+
+    {{#if hasNextPage}}
+        <a href="?page={{nextPage}}">Siguiente &raquo;</a>
+    {{else}}
+        <span class="disabled">Siguiente &raquo;</span>
+    {{/if}}
+</nav>

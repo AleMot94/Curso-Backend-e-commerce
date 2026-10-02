@@ -1,3 +1,29 @@
 p {
     color: red;
 }
+.pagination-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    padding: 12px;
+    background: #222;
+    color: #fff;
+}
+
+.pagination-bar a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.pagination-bar .disabled {
+    opacity: 0.4;
+}
+
+body {
+    padding-bottom: 60px;
+}

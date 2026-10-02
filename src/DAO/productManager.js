@@ -5,7 +5,7 @@ class ProductManager {
 
     async getProduct(page = 1, limit = 10) {
 
-        return await Product.paginate({}, { limit: limit, page: page });
+        return await Product.paginate({}, { limit: limit, page: page, lean: true });
     }
 
     async addProduct(title, description, price, thumbnail, code, stock) {
