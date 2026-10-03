@@ -29,12 +29,12 @@ IO.on('connection', (socket) => {
     })
 })
 
-APP.use("/api/products", PRODUCTS_ROUTER)
-APP.use("/api/carts", CARTS_ROUTER)
-
 APP.engine('handlebars', engine());
 APP.set('view engine', 'handlebars');
 APP.set('views', __DIRNAME + '/src/views');
+
+APP.use("/api/products", PRODUCTS_ROUTER)
+APP.use("/api/carts", CARTS_ROUTER)
 
 APP.use("/view/products", PRODUCTS_VIEW_ROUTER)
 APP.use("/view/chat", VIEW_CHAT_ROUTER)

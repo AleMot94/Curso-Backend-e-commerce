@@ -7,9 +7,17 @@ const PRODUCTS_ROUTER = express.Router();
 
 PRODUCTS_ROUTER.get("/", async (req, res) => {
     try {
-        const limit = req.query.limit;
-        const page = req.query.page;
-        const products = await productService.getProducts(page, limit);
+        const limit = Number(req.query.limit);
+        const page = Number(req.query.page);
+        const query = req.query.query
+        if (page < 1 || limit < 1) {
+            return res.status(400).json({
+                status: "error",
+                message: "Invalid page or limit",
+                answer: null
+            });
+        }
+        const products = await productService.getProducts(page, limit, query);
         return res.status(200).json({
             status: "success",
             mesage: "Products found successfully",

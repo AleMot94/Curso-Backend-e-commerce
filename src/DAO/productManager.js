@@ -3,7 +3,7 @@ import Product from "./models/Product.js";
 
 class ProductManager {
 
-    async getProduct(page = 1, limit = 10) {
+    async getProduct(page = 1, limit = 10, query = {}) {
 
         return await Product.paginate({}, { limit: limit, page: page, lean: true });
     }
