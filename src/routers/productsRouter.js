@@ -102,10 +102,13 @@ PRODUCTS_ROUTER.post("/", UPLOADER_PRODUCTS.single("thumbnail"), async (req, res
 
 })
 
-PRODUCTS_ROUTER.put("/:pid", async (req, res) => {
+PRODUCTS_ROUTER.put("/:pid", UPLOADER_PRODUCTS.single("thumbnail"), async (req, res) => {
     try {
         const id = req.params.pid
-        const UPDATED = await productService.updateProduct(id, req.body);
+        const data = { ...req.body }
+        // La imagen es opcional en el update: si no viene, se conserva la actual
+        if (req.file) data.thumbnail = `/images/products/${req.file.filename}`
+        const UPDATED = await productService.updateProduct(id, data);
         if (UPDATED === "code_duplicate") {
             return res.status(500).json({
                 status: "error",
