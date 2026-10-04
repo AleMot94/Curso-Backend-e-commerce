@@ -15,21 +15,21 @@ PRODUCTS_ROUTER.get("/", async (req, res) => {
             return res.status(400).json({
                 status: "error",
                 message: "Invalid page or limit",
-                answer: null
+                payload: null
             });
         }
         const products = await productService.getProducts(page, limit, outofstock, sort);
         return res.status(200).json({
             status: "success",
             mesage: "Products found successfully",
-            answer: products
+            payload: products
         });
     } catch (error) {
         console.log(error);
         return res.status(400).json({
             status: "error",
             message: "Error getting products",
-            answer: null
+            payload: null
         });
     }
 
@@ -44,13 +44,13 @@ PRODUCTS_ROUTER.get("/:pid", async (req, res) => {
             return res.status(200).json({
                 status: "success",
                 message: "Product found successfully",
-                answer: product
+                payload: product
             })
         } else {
             return res.status(404).json({
                 status: "error",
                 message: "Product not found",
-                answer: null
+                payload: null
             })
         }
     } catch (error) {
@@ -58,7 +58,7 @@ PRODUCTS_ROUTER.get("/:pid", async (req, res) => {
         return res.status(400).json({
             status: "error",
             message: "Error getting product",
-            answer: null
+            payload: null
         });
     }
 
@@ -70,7 +70,7 @@ PRODUCTS_ROUTER.post("/", UPLOADER_PRODUCTS.single("thumbnail"), async (req, res
             return res.status(400).json({
                 status: "error",
                 message: "No image provided",
-                answer: null
+                payload: null
             })
         }
         const { title, description, price, code, stock } = req.body;
@@ -81,7 +81,7 @@ PRODUCTS_ROUTER.post("/", UPLOADER_PRODUCTS.single("thumbnail"), async (req, res
             return res.status(400).json({
                 status: "error",
                 message: "Empty fields",
-                answer: null
+                payload: null
             })
         }
         if (ADD_PRODUCT === "code_duplicate") {
@@ -90,14 +90,14 @@ PRODUCTS_ROUTER.post("/", UPLOADER_PRODUCTS.single("thumbnail"), async (req, res
         return res.status(201).json({
             status: "success",
             message: "Product added successfully",
-            answer: ADD_PRODUCT
+            payload: ADD_PRODUCT
         });
     } catch (error) {
         console.log(error);
         return res.status(400).json({
             status: "error",
             message: "Error getting products",
-            answer: null
+            payload: null
         });
     }
 
@@ -114,27 +114,27 @@ PRODUCTS_ROUTER.put("/:pid", UPLOADER_PRODUCTS.single("thumbnail"), async (req, 
             return res.status(500).json({
                 status: "error",
                 message: "Code duplicate",
-                answer: null
+                payload: null
             })
         }
         if (!UPDATED) {
             return res.status(404).json({
                 status: "error",
                 message: "Product not found",
-                answer: null
+                payload: null
             })
         }
         return res.status(200).json({
             status: "success",
             message: "Product updated successfully",
-            answer: UPDATED
+            payload: UPDATED
         });
     } catch (error) {
         console.log(error);
         return res.status(500).json({
             status: "error",
             message: "Internal server error",
-            answer: null
+            payload: null
         });
     }
 
@@ -148,20 +148,20 @@ PRODUCTS_ROUTER.delete("/:pid", async (req, res) => {
             return res.status(404).json({
                 status: "error",
                 message: "Product not found",
-                answer: null
+                payload: null
             })
         }
         return res.status(200).json({
             status: "success",
             message: "Product deleted successfully",
-            answer: DELETED
+            payload: DELETED
         });
     } catch (error) {
         console.log(error);
         return res.status(400).json({
             status: "error",
             message: "Error getting products",
-            answer: null
+            payload: null
         });
     }
 })

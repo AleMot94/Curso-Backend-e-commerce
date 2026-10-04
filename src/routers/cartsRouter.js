@@ -1,6 +1,7 @@
 import express from "express";
 import { CM } from "../DAO/cartManager.js";
 import { productService } from "../services/productService.js"
+import { cartService } from "../services/cartService.js"
 
 const CARTS_ROUTER = express.Router();
 
@@ -10,14 +11,14 @@ CARTS_ROUTER.post("/", async (req, res) => {
         return res.status(201).json({
             status: "success",
             message: "Cart added successfully",
-            answer: NEW_CART
+            payload: NEW_CART
         });
     } catch (error) {
         console.error(error);
         return res.status(500).json({
             status: "error",
             message: "Internal server error",
-            answer: null
+            payload: null
         });
     }
 });
@@ -34,14 +35,14 @@ CARTS_ROUTER.post("/:cid/product/:pid", async (req, res) => {
             return res.status(404).json({
                 status: "error",
                 message: "Cart not found",
-                answer: null
+                payload: null
             });
         }
         if (!PRODUCT) {
             return res.status(404).json({
                 status: "error",
                 message: "Product not found",
-                answer: null
+                payload: null
             });
         }
 
@@ -59,14 +60,47 @@ CARTS_ROUTER.post("/:cid/product/:pid", async (req, res) => {
         return res.status(200).json({
             status: "success",
             message: "Product added to cart successfully",
-            answer: null
+            payload: null
         });
     } catch (error) {
         console.error(error);
         return res.status(500).json({
             status: "error",
             message: "Internal server error",
-            answer: null
+            payload: null
+        });
+    }
+});
+
+CARTS_ROUTER.delete("/:cid/product/:pid", async (req, res) => {
+    try {
+        const result = await cartService.removeProductFromCart(req.params.cid, req.params.pid);
+
+        if (result === "cart_not_found") {
+            return res.status(404).json({
+                status: "error",
+                message: "Cart not found",
+                payload: null
+            });
+        }
+        if (result === "product_not_in_cart") {
+            return res.status(404).json({
+                status: "error",
+                message: "Product not found in cart",
+                payload: null
+            });
+        }
+        return res.status(200).json({
+            status: "success",
+            message: "Product removed from cart successfully",
+            payload: null
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            status: "error",
+            message: "Internal server error",
+            payload: null
         });
     }
 });
@@ -77,14 +111,14 @@ CARTS_ROUTER.get("/", async (req, res) => {
         return res.status(200).json({
             status: "success",
             message: "Carts found successfully",
-            answer: carts
+            payload: carts
         });
     } catch (error) {
         console.error(error);
         return res.status(500).json({
             status: "error",
             message: "Internal server error",
-            answer: null
+            payload: null
         });
     }
 });
@@ -97,13 +131,13 @@ CARTS_ROUTER.get("/:cid", async (req, res) => {
             return res.status(200).json({
                 status: "success",
                 message: "Cart found successfully",
-                answer: cart.products
+                payload: cart.products
             });
         } else {
             return res.status(404).json({
                 status: "error",
                 message: "Cart not found",
-                answer: null
+                payload: null
             });
         }
     } catch (error) {
@@ -111,7 +145,7 @@ CARTS_ROUTER.get("/:cid", async (req, res) => {
         return res.status(500).json({
             status: "error",
             message: "Internal server error",
-            answer: null
+            payload: null
         });
     }
 });
@@ -125,20 +159,20 @@ CARTS_ROUTER.delete("/:cid", async (req, res) => {
             return res.status(404).json({
                 status: "error",
                 message: "Cart not found",
-                answer: null
+                payload: null
             });
         }
         return res.status(200).json({
             status: "success",
             message: "Cart deleted successfully",
-            answer: null
+            payload: null
         });
     } catch (error) {
         console.error(error);
         return res.status(500).json({
             status: "error",
             message: "Internal server error",
-            answer: null
+            payload: null
         });
     }
 });
@@ -152,20 +186,20 @@ CARTS_ROUTER.put("/:cid", async (req, res) => {
             return res.status(404).json({
                 status: "error",
                 message: "Cart not found",
-                answer: null
+                payload: null
             });
         }
         return res.status(200).json({
             status: "success",
             message: "Cart updated successfully",
-            answer: null
+            payload: null
         });
     } catch (error) {
         console.error(error);
         return res.status(500).json({
             status: "error",
             message: "Internal server error",
-            answer: null
+            payload: null
         });
     }
 });

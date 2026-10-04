@@ -32,6 +32,18 @@ class CartService {
         }
         return this.CM.addProductToCart(cid, pid, quantity)
     }
+    async removeProductFromCart(cid, pid) {
+        const cart = await this.CM.getCartById(cid)
+        if (!cart) {
+            return "cart_not_found"
+        }
+        const exists = cart.products.some(item => item.product.toString() === pid)
+        if (!exists) {
+            return "product_not_in_cart"
+        }
+        const products = cart.products.filter(item => item.product.toString() !== pid)
+        return this.CM.updateCart(cid, { products })
+    }
 }
 
 export const cartService = new CartService()
