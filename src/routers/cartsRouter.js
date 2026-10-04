@@ -105,6 +105,32 @@ CARTS_ROUTER.delete("/:cid/product/:pid", async (req, res) => {
     }
 });
 
+CARTS_ROUTER.delete("/:cid/products", async (req, res) => {
+    try {
+        const result = await cartService.clearCart(req.params.cid);
+
+        if (result === "cart_not_found") {
+            return res.status(404).json({
+                status: "error",
+                message: "Cart not found",
+                payload: null
+            });
+        }
+        return res.status(200).json({
+            status: "success",
+            message: "Cart emptied successfully",
+            payload: null
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            status: "error",
+            message: "Internal server error",
+            payload: null
+        });
+    }
+});
+
 CARTS_ROUTER.get("/", async (req, res) => {
     try {
         const carts = await CM.getCart();
