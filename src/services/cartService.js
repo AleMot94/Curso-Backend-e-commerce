@@ -21,16 +21,22 @@ class CartService {
     async updateCart(id, cart) {
         return this.CM.updateCart(id, cart)
     }
-    async addProductToCart(cid, pid, quantity) {
-        const product = await this.PM.getProductById(pid)
-        if (!product) {
-            return "not_found"
-        }
+    async addProductToCart(cid, pid) {
         const cart = await this.CM.getCartById(cid)
         if (!cart) {
-            return "not_found"
+            return "cart_not_found"
         }
-        return this.CM.addProductToCart(cid, pid, quantity)
+        const product = await this.PM.getProductById(pid)
+        if (!product) {
+            return "product_not_found"
+        }
+        const item = cart.products.find(item => item.product.toString() === pid)
+        if (item) {
+            item.quantity++
+        } else {
+            cart.products.push({ product: product._id, quantity: 1 })
+        }
+        return this.CM.updateCart(cid, { products: cart.products })
     }
     async removeProductFromCart(cid, pid) {
         const cart = await this.CM.getCartById(cid)

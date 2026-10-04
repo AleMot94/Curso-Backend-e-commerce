@@ -1,6 +1,5 @@
 import express from "express";
 import { CM } from "../DAO/cartManager.js";
-import { productService } from "../services/productService.js"
 import { cartService } from "../services/cartService.js"
 
 const CARTS_ROUTER = express.Router();
@@ -25,38 +24,22 @@ CARTS_ROUTER.post("/", async (req, res) => {
 
 CARTS_ROUTER.post("/:cid/product/:pid", async (req, res) => {
     try {
-        const ID_CART = req.params.cid;
-        const ID_PRODUCT = req.params.pid;
+        const result = await cartService.addProductToCart(req.params.cid, req.params.pid);
 
-        const CART = await CM.getCartById(ID_CART);
-        const PRODUCT = await productService.getProductById(ID_PRODUCT);
-
-        if (!CART) {
+        if (result === "cart_not_found") {
             return res.status(404).json({
                 status: "error",
                 message: "Cart not found",
                 payload: null
             });
         }
-        if (!PRODUCT) {
+        if (result === "product_not_found") {
             return res.status(404).json({
                 status: "error",
                 message: "Product not found",
                 payload: null
             });
         }
-
-        const productIndex = CART.products.findIndex(item => item.product.toString() === ID_PRODUCT);
-
-        if (productIndex === -1) {
-            CART.products.push({
-                product: PRODUCT._id,
-                quantity: 1,
-            });
-        } else {
-            CART.products[productIndex].quantity++;
-        }
-        await CM.updateCart(ID_CART, { products: CART.products });
         return res.status(200).json({
             status: "success",
             message: "Product added to cart successfully",
