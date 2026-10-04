@@ -1,0 +1,23 @@
+<h1>Carrito</h1>
+<a href="/view/products">&laquo; Seguir comprando</a>
+
+{{#if notFound}}
+    <p>Carrito no encontrado.</p>
+{{else}}
+    {{#if products.length}}
+        <div class="products-grid">
+            {{#each products}}
+                <article class="product-card">
+                    <img src="{{this.product.thumbnail}}" alt="{{this.product.title}}">
+                    <h2>{{this.product.title}}</h2>
+                    <p>Precio: ${{this.product.price}}</p>
+                    <p>Cantidad: {{this.quantity}}</p>
+                    <p>Subtotal: ${{this.subtotal}}</p>
+                </article>
+            {{/each}}
+        </div>
+        <h2>Total: ${{total}}</h2>
+    {{else}}
+        <p>El carrito está vacío.</p>
+    {{/if}}
+{{/if}}

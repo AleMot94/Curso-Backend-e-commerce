@@ -23,3 +23,12 @@ document.addEventListener("click", (e) => {
     const btn = e.target.closest(".add-to-cart")
     if (btn) addToCart(btn.dataset.id)
 })
+
+const viewCartLink = document.getElementById("view-cart")
+if (viewCartLink) {
+    viewCartLink.addEventListener("click", async (e) => {
+        e.preventDefault()
+        const cid = await getCartId()
+        window.location.href = `/view/cart/${cid}`
+    })
+}

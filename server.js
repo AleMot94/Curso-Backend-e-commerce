@@ -3,6 +3,7 @@ import express from "express"
 import PRODUCTS_ROUTER from "./src/routers/productsRouter.js"
 import CARTS_ROUTER from "./src/routers/cartsRouter.js"
 import PRODUCTS_VIEW_ROUTER from "./src/routers/viewProductsRouter.js"
+import VIEW_CART_ROUTER from "./src/routers/viewCartRouter.js"
 import VIEW_CHAT_ROUTER from "./src/routers/viewChatRouter.js"
 import { engine } from 'express-handlebars';
 import { createServer } from 'http'
@@ -37,6 +38,7 @@ APP.use("/api/products", PRODUCTS_ROUTER)
 APP.use("/api/carts", CARTS_ROUTER)
 
 APP.use("/view/products", PRODUCTS_VIEW_ROUTER)
+APP.use("/view/cart", VIEW_CART_ROUTER)
 APP.use("/view/chat", VIEW_CHAT_ROUTER)
 
 const startServer = async () => {

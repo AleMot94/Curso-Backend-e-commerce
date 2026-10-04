@@ -1,6 +1,10 @@
 import { CM } from "../DAO/cartManager.js"
 import { PM } from "../DAO/productManager.js"
 
+const toIds = (products) => products
+    .filter(item => item.product)
+    .map(item => ({ product: item.product._id, quantity: item.quantity }))
+
 class CartService {
     constructor() {
         this.CM = CM
@@ -30,25 +34,36 @@ class CartService {
         if (!product) {
             return "product_not_found"
         }
-        const item = cart.products.find(item => item.product.toString() === pid)
+        const item = cart.products.find(item => item.product?._id.toString() === pid)
         if (item) {
             item.quantity++
         } else {
             cart.products.push({ product: product._id, quantity: 1 })
         }
-        return this.CM.updateCart(cid, { products: cart.products })
+        return this.CM.updateCart(cid, { products: toIds(cart.products) })
+    }
+    async getCartDetail(cid) {
+        const cart = await this.CM.getCartById(cid)
+        if (!cart) {
+            return null
+        }
+        const products = cart.toObject().products
+            .filter(item => item.product)
+            .map(item => ({ ...item, subtotal: item.product.price * item.quantity }))
+        const total = products.reduce((acc, item) => acc + item.subtotal, 0)
+        return { _id: cart._id, products, total }
     }
     async removeProductFromCart(cid, pid) {
         const cart = await this.CM.getCartById(cid)
         if (!cart) {
             return "cart_not_found"
         }
-        const exists = cart.products.some(item => item.product.toString() === pid)
+        const exists = cart.products.some(item => item.product?._id.toString() === pid)
         if (!exists) {
             return "product_not_in_cart"
         }
-        const products = cart.products.filter(item => item.product.toString() !== pid)
-        return this.CM.updateCart(cid, { products })
+        const products = cart.products.filter(item => item.product?._id.toString() !== pid)
+        return this.CM.updateCart(cid, { products: toIds(products) })
     }
     async clearCart(cid) {
         const cart = await this.CM.getCartById(cid)
@@ -65,7 +80,7 @@ class CartService {
         if (!cart) {
             return "cart_not_found"
         }
-        const item = cart.products.find(item => item.product.toString() === pid)
+        const item = cart.products.find(item => item.product?._id.toString() === pid)
         if (!item) {
             return "product_not_in_cart"
         }
@@ -77,7 +92,7 @@ class CartService {
             return { error: "insufficient_stock", stock: product.stock }
         }
         item.quantity = quantity
-        return this.CM.updateCart(cid, { products: cart.products })
+        return this.CM.updateCart(cid, { products: toIds(cart.products) })
     }
 }
 
