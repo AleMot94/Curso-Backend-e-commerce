@@ -41,7 +41,7 @@ APP.use("/view/chat", VIEW_CHAT_ROUTER)
 
 const startServer = async () => {
     await connectDB()
-    //await crearProductos()  // TODO: comentar esta línea después de correrlo una vez
+    // await crearProductos()  // TODO: comentar esta línea después de correrlo una vez
     HTTP_SERVER.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`)
     })
