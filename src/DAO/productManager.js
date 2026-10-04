@@ -3,9 +3,9 @@ import Product from "./models/Product.js";
 
 class ProductManager {
 
-    async getProduct(page = 1, limit = 10, filter = {}) {
+    async getProduct(page = 1, limit = 10, filter = {}, sort) {
 
-        return await Product.paginate(filter, { limit: limit, page: page, lean: true });
+        return await Product.paginate(filter, { limit: limit, page: page, sort: sort, lean: true });
     }
 
     async addProduct(title, description, price, thumbnail, code, stock) {

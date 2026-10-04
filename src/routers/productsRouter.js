@@ -10,6 +10,7 @@ PRODUCTS_ROUTER.get("/", async (req, res) => {
         const limit = Number(req.query.limit);
         const page = Number(req.query.page);
         const outofstock = req.query.outofstock
+        const sort = req.query.sort
         if (page < 1 || limit < 1) {
             return res.status(400).json({
                 status: "error",
@@ -17,7 +18,7 @@ PRODUCTS_ROUTER.get("/", async (req, res) => {
                 answer: null
             });
         }
-        const products = await productService.getProducts(page, limit, outofstock);
+        const products = await productService.getProducts(page, limit, outofstock, sort);
         return res.status(200).json({
             status: "success",
             mesage: "Products found successfully",
