@@ -177,6 +177,53 @@ CARTS_ROUTER.delete("/:cid", async (req, res) => {
     }
 });
 
+CARTS_ROUTER.put("/:cid/product/:pid", async (req, res) => {
+    try {
+        const result = await cartService.updateProductQuantity(req.params.cid, req.params.pid, req.body?.quantity);
+
+        if (result === "invalid_quantity") {
+            return res.status(400).json({
+                status: "error",
+                message: "Quantity must be a positive integer",
+                payload: null
+            });
+        }
+        if (result === "cart_not_found") {
+            return res.status(404).json({
+                status: "error",
+                message: "Cart not found",
+                payload: null
+            });
+        }
+        if (result === "product_not_in_cart") {
+            return res.status(404).json({
+                status: "error",
+                message: "Product not found in cart",
+                payload: null
+            });
+        }
+        if (result.error === "insufficient_stock") {
+            return res.status(409).json({
+                status: "error",
+                message: "Quantity exceeds available stock",
+                payload: { stock: result.stock }
+            });
+        }
+        return res.status(200).json({
+            status: "success",
+            message: "Product quantity updated successfully",
+            payload: null
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            status: "error",
+            message: "Internal server error",
+            payload: null
+        });
+    }
+});
+
 CARTS_ROUTER.put("/:cid", async (req, res) => {
     try {
         const id = req.params.cid;

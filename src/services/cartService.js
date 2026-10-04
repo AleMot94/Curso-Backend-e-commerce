@@ -44,6 +44,28 @@ class CartService {
         const products = cart.products.filter(item => item.product.toString() !== pid)
         return this.CM.updateCart(cid, { products })
     }
+    async updateProductQuantity(cid, pid, quantity) {
+        if (!Number.isInteger(quantity) || quantity < 1) {
+            return "invalid_quantity"
+        }
+        const cart = await this.CM.getCartById(cid)
+        if (!cart) {
+            return "cart_not_found"
+        }
+        const item = cart.products.find(item => item.product.toString() === pid)
+        if (!item) {
+            return "product_not_in_cart"
+        }
+        const product = await this.PM.getProductById(pid)
+        if (!product) {
+            return "product_not_in_cart"
+        }
+        if (quantity > product.stock) {
+            return { error: "insufficient_stock", stock: product.stock }
+        }
+        item.quantity = quantity
+        return this.CM.updateCart(cid, { products: cart.products })
+    }
 }
 
 export const cartService = new CartService()
